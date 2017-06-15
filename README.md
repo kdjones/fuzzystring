@@ -29,21 +29,24 @@ While all of the algorithms are exposed and can be used and can provide their ra
 
 For two strings that are desired to be compared approximately, a boolean response of equality can be garnered in the following way:
 
-    string source = "kevin";
-    string target = "kevyn";
 
-    List<FuzzyStringComparisonOptions> options = new List<FuzzyStringComparisonOptions>();
+```csharp
+string source = "kevin";
+string target = "kevyn";
 
-    // Choose which algorithms should weigh in for the comparison
-    options.Add(FuzzyStringComparisonOptions.UseOverlapCoefficient);
-    options.Add(FuzzyStringComparisonOptions.UseLongestCommonSubsequence);
-    options.Add(FuzzyStringComparisonOptions.UseLongestCommonSubstring);
+List<FuzzyStringComparisonOptions> options = new List<FuzzyStringComparisonOptions>();
 
-    // Choose the relative strength of the comparison - is it almost exactly equal? or is it just close?
-    FuzzyStringComparisonTolerance tolerance = FuzzyStringTolerance.Strong;
+// Choose which algorithms should weigh in for the comparison
+options.Add(FuzzyStringComparisonOptions.UseOverlapCoefficient);
+options.Add(FuzzyStringComparisonOptions.UseLongestCommonSubsequence);
+options.Add(FuzzyStringComparisonOptions.UseLongestCommonSubstring);
 
-    // Get a boolean determination of approximate equality
-    bool result = source.ApproximatelyEquals(target, options, tolerance);
+// Choose the relative strength of the comparison - is it almost exactly equal? or is it just close?
+FuzzyStringComparisonTolerance tolerance = FuzzyStringTolerance.Strong;
+
+// Get a boolean determination of approximate equality
+bool result = source.ApproximatelyEquals(target, options, tolerance);
+```
 
 [legacy documentation]: http://fuzzystring.codeplex.com/wikipage?title=Using%20the%20ApproximatelyEquals%28%29%20Extension&referringTitle=Documentation
 
