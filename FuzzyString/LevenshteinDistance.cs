@@ -28,9 +28,11 @@ namespace FuzzyString
             if (source[source.Length - 1] == target[target.Length - 1]) { distance = 0; }
             else { distance = 1; }
 
-            return Math.Min(Math.Min(LevenshteinDistance(source.Substring(0, source.Length - 1), target) + 1,
-                                     LevenshteinDistance(source, target.Substring(0, target.Length - 1))) + 1,
-                                     LevenshteinDistance(source.Substring(0, source.Length - 1), target.Substring(0, target.Length - 1)) + distance);
+            var sourceInitial = source.Substring(0, source.Length - 1);
+            var targetInitial = target.Substring(0, target.Length - 1);
+            return Math.Min(Math.Min(LevenshteinDistance(sourceInitial, target) + 1,
+                                     LevenshteinDistance(source, targetInitial)) + 1,
+                                     LevenshteinDistance(sourceInitial, targetInitial) + distance);
         }
 
         /// <summary>
