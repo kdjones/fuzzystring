@@ -78,11 +78,8 @@ namespace FuzzyString
         /// <returns></returns>
         public static int LevenshteinDistanceLowerBounds(this string source, string target)
         {
-            // If the two strings are the same length then the lower bound is zero.
-            if (source.Length == target.Length) { return 0; }
-
             // If the two strings are different lengths then the lower bounds is the difference in length.
-            else { return Math.Abs(source.Length - target.Length); }
+            return Math.Abs(source.Length - target.Length);
         }
 
     }
