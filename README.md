@@ -42,7 +42,7 @@ options.Add(FuzzyStringComparisonOptions.UseLongestCommonSubsequence);
 options.Add(FuzzyStringComparisonOptions.UseLongestCommonSubstring);
 
 // Choose the relative strength of the comparison - is it almost exactly equal? or is it just close?
-FuzzyStringComparisonTolerance tolerance = FuzzyStringTolerance.Strong;
+FuzzyStringComparisonTolerance tolerance = FuzzyStringComparisonTolerance.Strong;
 
 // Get a boolean determination of approximate equality
 bool result = source.ApproximatelyEquals(target, options, tolerance);
