@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FuzzyString
 {
     public static partial class ComparisonMetrics
-    { 
+    {
         public static bool ApproximatelyEquals(this string source, string target,  FuzzyStringComparisonTolerance tolerance, params FuzzyStringComparisonOptions[] options)
         {
             List<double> comparisonResults = new List<double>();
@@ -89,53 +89,18 @@ namespace FuzzyString
                 return false;
             }
 
-            if (tolerance == FuzzyStringComparisonTolerance.Strong)
+            switch (tolerance)
             {
-                if (comparisonResults.Average() < 0.25)
-                {
-                    return true;
-                }
-                else
-                {
+                case FuzzyStringComparisonTolerance.Strong:
+                    return comparisonResults.Average() < 0.25;
+                case FuzzyStringComparisonTolerance.Normal:
+                    return comparisonResults.Average() < 0.5;
+                case FuzzyStringComparisonTolerance.Weak:
+                    return comparisonResults.Average() < 0.75;
+                case FuzzyStringComparisonTolerance.Manual:
+                    return comparisonResults.Average() > 0.6;
+                default:
                     return false;
-                }
-            }
-            else if (tolerance == FuzzyStringComparisonTolerance.Normal)
-            {
-                if (comparisonResults.Average() < 0.5)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (tolerance == FuzzyStringComparisonTolerance.Weak)
-            {
-                if (comparisonResults.Average() < 0.75)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (tolerance == FuzzyStringComparisonTolerance.Manual)
-            {
-                if (comparisonResults.Average() > 0.6)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
             }
         }
     }
