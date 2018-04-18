@@ -15,7 +15,7 @@ namespace FuzzyString
 
         public static double JaccardIndex(this string source, string target)
         {
-            return (Convert.ToDouble(source.Intersect(target).Count())) / (Convert.ToDouble(source.Union(target).Count()));
+            return Convert.ToDouble(source.Intersect(target).Count()) / Convert.ToDouble(source.Union(target).Count());
         }
     }
 }
