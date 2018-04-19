@@ -3,7 +3,7 @@
 namespace FuzzyString
 {
     public static partial class ComparisonMetrics
-    { 
+    {
         /// <summary>
         /// Calculate the minimum number of single-character edits needed to change the source into the target,
         /// allowing insertions, deletions, and substitutions.
@@ -26,9 +26,9 @@ namespace FuzzyString
 
             var sourceInitial = source.Substring(0, source.Length - 1);
             var targetInitial = target.Substring(0, target.Length - 1);
-            return Math.Min(Math.Min(LevenshteinDistance(sourceInitial, target) + 1,
-                                     LevenshteinDistance(source, targetInitial)) + 1,
-                                     LevenshteinDistance(sourceInitial, targetInitial) + distance);
+
+            var min = Math.Min(LevenshteinDistance(sourceInitial, target) + 1, LevenshteinDistance(source, targetInitial));
+            return Math.Min(min + 1, LevenshteinDistance(sourceInitial, targetInitial) + distance);
         }
 
         /// <summary>
@@ -60,8 +60,8 @@ namespace FuzzyString
             if (source.Length == target.Length) { return source.HammingDistance(target); }
 
             // Otherwise, the upper bound is the length of the longer string.
-            else if (source.Length > target.Length) { return source.Length; }
-            else if (target.Length > source.Length) { return target.Length; }
+            if (source.Length > target.Length) { return source.Length; }
+            if (target.Length > source.Length) { return target.Length; }
 
             return 9999;
         }
