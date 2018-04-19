@@ -19,10 +19,7 @@ namespace FuzzyString
             if (source.Length == 0) { return target.Length; }
             if (target.Length == 0) { return source.Length; }
 
-            int distance = 0;
-
-            if (source[source.Length - 1] == target[target.Length - 1]) { distance = 0; }
-            else { distance = 1; }
+            var distance = source[source.Length - 1] == target[target.Length - 1] ? 0 : 1;
 
             var sourceInitial = source.Substring(0, source.Length - 1);
             var targetInitial = target.Substring(0, target.Length - 1);

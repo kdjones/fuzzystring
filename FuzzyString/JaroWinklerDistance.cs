@@ -14,7 +14,7 @@ namespace FuzzyString
 
         public static float JaroWinklerDistanceWithPrefixScale(string source, string target, float p)
         {
-            float prefixScale = 0.1f;
+            float prefixScale;
 
             if (p > 0.25) { prefixScale = 0.25f; } // The maximu value for distance to not exceed 1
             else if (p < 0) { prefixScale = 0; } // The Jaro Distance
@@ -23,7 +23,7 @@ namespace FuzzyString
             float jaroDistance = source.JaroDistance(target);
             float commonPrefixLength = CommonPrefixLength(source, target);
 
-            return jaroDistance + (commonPrefixLength * prefixScale * (1 - jaroDistance));
+            return jaroDistance + commonPrefixLength * prefixScale * (1 - jaroDistance);
         }
 
         public static float CommonPrefixLength(string source, string target)

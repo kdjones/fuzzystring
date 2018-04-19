@@ -30,17 +30,15 @@ namespace FuzzyString
                 for (int j = 0; j < target.Length + 1; j++) { C[0, j] = 0; }
 
                 for (int i = 1; i < source.Length + 1; i++)
+                for (int j = 1; j < target.Length + 1; j++)
                 {
-                    for (int j = 1; j < target.Length + 1; j++)
+                    if (source[i - 1].Equals(target[j - 1]))
                     {
-                        if (source[i - 1].Equals(target[j - 1]))
-                        {
-                            C[i, j] = C[i - 1, j - 1] + 1;
-                        }
-                        else
-                        {
-                            C[i, j] = Math.Max(C[i, j - 1], C[i - 1, j]);
-                        }
+                        C[i, j] = C[i - 1, j - 1] + 1;
+                    }
+                    else
+                    {
+                        C[i, j] = Math.Max(C[i, j - 1], C[i - 1, j]);
                     }
                 }
 
