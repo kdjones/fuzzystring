@@ -5,14 +5,14 @@ namespace FuzzyString
 {
     public static partial class ComparisonMetrics
     {
-        public static double SorensenDiceDistance(this string source, string target)
+        public static float SorensenDiceDistance(this string source, string target)
         {
             return 1 - source.SorensenDiceIndex(target);
         }
 
-        public static double SorensenDiceIndex(this string source, string target)
+        public static float SorensenDiceIndex(this string source, string target)
         {
-            return (2 * Convert.ToDouble(source.Intersect(target).Count())) / (Convert.ToDouble(source.Length + target.Length));
+            return 2 * Convert.ToSingle(source.Intersect(target).Count()) / Convert.ToSingle(source.Length + target.Length);
         }
     }
 }

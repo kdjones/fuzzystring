@@ -9,7 +9,7 @@ namespace FuzzyString
         public static bool ApproximatelyEquals(this string source, string target, FuzzyStringComparisonTolerance tolerance,
             FuzzyStringComparisonOptions options)
         {
-            List<double> comparisonResults = new List<double>();
+            var comparisonResults = new List<float>();
 
             if (!options.HasFlag(FuzzyStringComparisonOptions.CaseSensitive))
             {
@@ -48,26 +48,26 @@ namespace FuzzyString
             // Min: LevenshteinDistanceLowerBounds    Max: LevenshteinDistanceUpperBounds
             if (options.HasFlag(FuzzyStringComparisonOptions.UseNormalizedLevenshteinDistance))
             {
-                comparisonResults.Add(Convert.ToDouble(source.NormalizedLevenshteinDistance(target)) /
-                                      Convert.ToDouble(Math.Max(source.Length, target.Length) -
+                comparisonResults.Add(Convert.ToSingle(source.NormalizedLevenshteinDistance(target)) /
+                                      Convert.ToSingle(Math.Max(source.Length, target.Length) -
                                                        source.LevenshteinDistanceLowerBounds(target)));
             }
             else if (options.HasFlag(FuzzyStringComparisonOptions.UseLevenshteinDistance))
             {
-                comparisonResults.Add(Convert.ToDouble(source.LevenshteinDistance(target)) /
-                                      Convert.ToDouble(source.LevenshteinDistanceUpperBounds(target)));
+                comparisonResults.Add(Convert.ToSingle(source.LevenshteinDistance(target)) /
+                                      Convert.ToSingle(source.LevenshteinDistanceUpperBounds(target)));
             }
 
             if (options.HasFlag(FuzzyStringComparisonOptions.UseLongestCommonSubsequence))
             {
-                comparisonResults.Add(1 - Convert.ToDouble(source.LongestCommonSubsequence(target).Length /
+                comparisonResults.Add(1 - Convert.ToSingle(source.LongestCommonSubsequence(target).Length /
                                                            Convert.ToDouble(Math.Min(source.Length, target.Length))));
             }
 
             if (options.HasFlag(FuzzyStringComparisonOptions.UseLongestCommonSubstring))
             {
-                comparisonResults.Add(1 - Convert.ToDouble(source.LongestCommonSubstring(target).Length /
-                                                           Convert.ToDouble(Math.Min(source.Length, target.Length))));
+                comparisonResults.Add(1 - Convert.ToSingle(source.LongestCommonSubstring(target).Length /
+                                                           Convert.ToSingle(Math.Min(source.Length, target.Length))));
             }
 
             // Min: 0    Max: 1

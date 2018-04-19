@@ -41,7 +41,7 @@ namespace FuzzyString
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns>The Levenshtein distance, normalized so that the lower bound is always zero, rather than the difference in length between the two strings</returns>
-        public static double NormalizedLevenshteinDistance(this string source, string target)
+        public static float NormalizedLevenshteinDistance(this string source, string target)
         {
             int unnormalizedLevenshteinDistance = source.LevenshteinDistance(target);
 
