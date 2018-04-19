@@ -10,20 +10,20 @@ namespace FuzzyStringConsole
     class Program
     {
         static void Main(string[] args)
-        { 
+        {
             string kevin = "kevin";
             string kevyn = "kevyn";
 
-            List<FuzzyStringComparisonOptions> options = new List<FuzzyStringComparisonOptions>();
-            options.Add(FuzzyStringComparisonOptions.UseJaccardDistance);
-            options.Add(FuzzyStringComparisonOptions.UseNormalizedLevenshteinDistance);
-            options.Add(FuzzyStringComparisonOptions.UseOverlapCoefficient);
-            options.Add(FuzzyStringComparisonOptions.UseLongestCommonSubsequence);
-            options.Add(FuzzyStringComparisonOptions.CaseSensitive);
+            var options = FuzzyStringComparisonOptions.UseJaccardDistance
+                | FuzzyStringComparisonOptions.UseNormalizedLevenshteinDistance
+                | FuzzyStringComparisonOptions.UseOverlapCoefficient
+                | FuzzyStringComparisonOptions.UseLongestCommonSubsequence
+                | FuzzyStringComparisonOptions.UseLevenshteinDistance
+                | FuzzyStringComparisonOptions.CaseSensitive;
 
-            Console.WriteLine(kevin.ApproximatelyEquals(kevyn, FuzzyStringComparisonTolerance.Weak, options.ToArray()));
-            Console.WriteLine(kevin.ApproximatelyEquals(kevyn, FuzzyStringComparisonTolerance.Normal, options.ToArray()));
-            Console.WriteLine(kevin.ApproximatelyEquals(kevyn, FuzzyStringComparisonTolerance.Strong, options.ToArray()));
+            Console.WriteLine(kevin.ApproximatelyEquals(kevyn, FuzzyStringComparisonTolerance.Weak, options));
+            Console.WriteLine(kevin.ApproximatelyEquals(kevyn, FuzzyStringComparisonTolerance.Normal, options));
+            Console.WriteLine(kevin.ApproximatelyEquals(kevyn, FuzzyStringComparisonTolerance.Strong, options));
 
             Console.ReadLine();
         }
