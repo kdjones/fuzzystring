@@ -13,8 +13,8 @@ namespace FuzzyString
 
             if (!options.HasFlag(FuzzyStringComparisonOptions.CaseSensitive))
             {
-                source = source.Capitalize();
-                target = target.Capitalize();
+                source = source.ToLower();
+                target = target.ToLower();
             }
 
             // Min: 0    Max: source.Length = target.Length
