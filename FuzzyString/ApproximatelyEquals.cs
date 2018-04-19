@@ -18,7 +18,7 @@ namespace FuzzyString
             }
 
             // Min: 0    Max: source.Length = target.Length
-            if (tolerance.HasFlag(FuzzyStringComparisonOptions.UseHammingDistance))
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseHammingDistance))
             {
                 if (source.Length == target.Length)
                 {
