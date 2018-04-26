@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FuzzyString
 {
     public static partial class ComparisonMetrics
-    { 
-        public static bool ApproximatelyEquals(this string source, string target,  FuzzyStringComparisonTolerance tolerance, params FuzzyStringComparisonOptions[] options)
+    {
+        public static bool ApproximatelyEquals(this string source, string target, FuzzyStringComparisonTolerance tolerance,
+            FuzzyStringComparisonOptions options)
         {
-            List<double> comparisonResults = new List<double>();
+            var comparisonResults = new List<float>();
 
-            if (!options.Contains(FuzzyStringComparisonOptions.CaseSensitive))
+            if (!options.HasFlag(FuzzyStringComparisonOptions.CaseSensitive))
             {
-                source = source.Capitalize();
-                target = target.Capitalize();
+                source = source.ToLower();
+                target = target.ToLower();
             }
 
             // Min: 0    Max: source.Length = target.Length
-            if (options.Contains(FuzzyStringComparisonOptions.UseHammingDistance))
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseHammingDistance))
             {
                 if (source.Length == target.Length)
                 {
@@ -28,58 +27,63 @@ namespace FuzzyString
             }
 
             // Min: 0    Max: 1
-            if (options.Contains(FuzzyStringComparisonOptions.UseJaccardDistance))
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseJaccardDistance))
             {
                 comparisonResults.Add(source.JaccardDistance(target));
             }
 
             // Min: 0    Max: 1
-            if (options.Contains(FuzzyStringComparisonOptions.UseJaroDistance))
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseJaroDistance))
             {
                 comparisonResults.Add(source.JaroDistance(target));
             }
 
             // Min: 0    Max: 1
-            if (options.Contains(FuzzyStringComparisonOptions.UseJaroWinklerDistance))
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseJaroWinklerDistance))
             {
                 comparisonResults.Add(source.JaroWinklerDistance(target));
             }
 
             // Min: 0    Max: LevenshteinDistanceUpperBounds - LevenshteinDistanceLowerBounds
             // Min: LevenshteinDistanceLowerBounds    Max: LevenshteinDistanceUpperBounds
-            if (options.Contains(FuzzyStringComparisonOptions.UseNormalizedLevenshteinDistance))
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseNormalizedLevenshteinDistance))
             {
-                comparisonResults.Add(Convert.ToDouble(source.NormalizedLevenshteinDistance(target)) / Convert.ToDouble((Math.Max(source.Length, target.Length) - source.LevenshteinDistanceLowerBounds(target))));
+                comparisonResults.Add(Convert.ToSingle(source.NormalizedLevenshteinDistance(target)) /
+                                      Convert.ToSingle(Math.Max(source.Length, target.Length) -
+                                                       source.LevenshteinDistanceLowerBounds(target)));
             }
-            else if (options.Contains(FuzzyStringComparisonOptions.UseLevenshteinDistance))
+            else if (options.HasFlag(FuzzyStringComparisonOptions.UseLevenshteinDistance))
             {
-                comparisonResults.Add(Convert.ToDouble(source.LevenshteinDistance(target)) / Convert.ToDouble(source.LevenshteinDistanceUpperBounds(target)));
-            }
-
-            if (options.Contains(FuzzyStringComparisonOptions.UseLongestCommonSubsequence))
-            {
-                comparisonResults.Add(1 - Convert.ToDouble((source.LongestCommonSubsequence(target).Length) / Convert.ToDouble(Math.Min(source.Length, target.Length))));
+                comparisonResults.Add(Convert.ToSingle(source.LevenshteinDistance(target)) /
+                                      Convert.ToSingle(source.LevenshteinDistanceUpperBounds(target)));
             }
 
-            if (options.Contains(FuzzyStringComparisonOptions.UseLongestCommonSubstring))
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseLongestCommonSubsequence))
             {
-                comparisonResults.Add(1 - Convert.ToDouble((source.LongestCommonSubstring(target).Length) / Convert.ToDouble(Math.Min(source.Length, target.Length))));
+                comparisonResults.Add(1 - Convert.ToSingle(source.LongestCommonSubsequence(target).Length /
+                                                           Convert.ToDouble(Math.Min(source.Length, target.Length))));
+            }
+
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseLongestCommonSubstring))
+            {
+                comparisonResults.Add(1 - Convert.ToSingle(source.LongestCommonSubstring(target).Length /
+                                                           Convert.ToSingle(Math.Min(source.Length, target.Length))));
             }
 
             // Min: 0    Max: 1
-            if (options.Contains(FuzzyStringComparisonOptions.UseSorensenDiceDistance))
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseSorensenDiceDistance))
             {
                 comparisonResults.Add(source.SorensenDiceDistance(target));
             }
 
             // Min: 0    Max: 1
-            if (options.Contains(FuzzyStringComparisonOptions.UseOverlapCoefficient))
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseOverlapCoefficient))
             {
                 comparisonResults.Add(1 - source.OverlapCoefficient(target));
             }
 
             // Min: 0    Max: 1
-            if (options.Contains(FuzzyStringComparisonOptions.UseRatcliffObershelpSimilarity))
+            if (options.HasFlag(FuzzyStringComparisonOptions.UseRatcliffObershelpSimilarity))
             {
                 comparisonResults.Add(1 - source.RatcliffObershelpSimilarity(target));
             }
@@ -89,53 +93,18 @@ namespace FuzzyString
                 return false;
             }
 
-            if (tolerance == FuzzyStringComparisonTolerance.Strong)
+            switch (tolerance)
             {
-                if (comparisonResults.Average() < 0.25)
-                {
-                    return true;
-                }
-                else
-                {
+                case FuzzyStringComparisonTolerance.Strong:
+                    return comparisonResults.Average() < 0.25;
+                case FuzzyStringComparisonTolerance.Normal:
+                    return comparisonResults.Average() < 0.5;
+                case FuzzyStringComparisonTolerance.Weak:
+                    return comparisonResults.Average() < 0.75;
+                case FuzzyStringComparisonTolerance.Manual:
+                    return comparisonResults.Average() > 0.6;
+                default:
                     return false;
-                }
-            }
-            else if (tolerance == FuzzyStringComparisonTolerance.Normal)
-            {
-                if (comparisonResults.Average() < 0.5)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (tolerance == FuzzyStringComparisonTolerance.Weak)
-            {
-                if (comparisonResults.Average() < 0.75)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (tolerance == FuzzyStringComparisonTolerance.Manual)
-            {
-                if (comparisonResults.Average() > 0.6)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
             }
         }
     }

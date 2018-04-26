@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FuzzyString
+﻿namespace FuzzyString
 {
     public static partial class ComparisonMetrics
     {
@@ -12,18 +6,17 @@ namespace FuzzyString
         {
             int distance = 0;
 
-            if (source.Length == target.Length)
+            if (source.Length != target.Length) return 99999;
+
+            for (int i = 0; i < source.Length; i++)
             {
-                for (int i = 0; i < source.Length; i++)
+                if (!source[i].Equals(target[i]))
                 {
-                    if (!source[i].Equals(target[i]))
-                    {
-                        distance++;
-                    }
+                    distance++;
                 }
-                return distance;
             }
-            else { return 99999; }
+
+            return distance;
         }
     }
 }

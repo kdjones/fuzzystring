@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FuzzyString
 {
@@ -10,20 +6,30 @@ namespace FuzzyString
     {
         public static string LongestCommonSubsequence(this string source, string target)
         {
-            int[,] C = LongestCommonSubsequenceLengthTable(source, target);
-
-            return Backtrack(C, source, target, source.Length, target.Length);
+            return BacktrackTable.Create(source, target).Backtrack();
         }
 
-        private static int[,] LongestCommonSubsequenceLengthTable(string source, string target)
+        private struct BacktrackTable
         {
-            int[,] C = new int[source.Length + 1, target.Length + 1];
+            private readonly int[,] C;
+            private readonly string source;
+            private readonly string target;
 
-            for (int i = 0; i < source.Length + 1; i++) { C[i, 0] = 0; }
-            for (int j = 0; j < target.Length + 1; j++) { C[0, j] = 0; }
-
-            for (int i = 1; i < source.Length + 1; i++)
+            private BacktrackTable(int[,] C, string source, string target)
             {
+                this.C = C;
+                this.source = source;
+                this.target = target;
+            }
+
+            public static BacktrackTable Create(string source, string target)
+            {
+                int[,] C = new int[source.Length + 1, target.Length + 1];
+
+                for (int i = 0; i < source.Length + 1; i++) { C[i, 0] = 0; }
+                for (int j = 0; j < target.Length + 1; j++) { C[0, j] = 0; }
+
+                for (int i = 1; i < source.Length + 1; i++)
                 for (int j = 1; j < target.Length + 1; j++)
                 {
                     if (source[i - 1].Equals(target[j - 1]))
@@ -35,31 +41,33 @@ namespace FuzzyString
                         C[i, j] = Math.Max(C[i, j - 1], C[i - 1, j]);
                     }
                 }
+
+                return new BacktrackTable(C, source, target);
             }
 
-            return C;
-        }
+            public string Backtrack()
+            {
+                return Backtrack(source.Length, target.Length);
+            }
 
-        private static string Backtrack(int[,] C, string source, string target, int i, int j)
-        {
-            if (i == 0 || j == 0)
+            private string Backtrack( int i, int j)
             {
-                return "";
-            }
-            else if (source[i - 1].Equals(target[j - 1]))
-            {
-                return Backtrack(C, source, target, i - 1, j - 1) + source[i - 1];
-            }
-            else
-            {
+                if (i == 0 || j == 0)
+                {
+                    return "";
+                }
+
+                if (source[i - 1].Equals(target[j - 1]))
+                {
+                    return Backtrack(i - 1, j - 1) + source[i - 1];
+                }
+
                 if (C[i, j - 1] > C[i - 1, j])
                 {
-                    return Backtrack(C, source, target, i, j - 1);
+                    return Backtrack(i, j - 1);
                 }
-                else
-                {
-                    return Backtrack(C, source, target, i - 1, j);
-                }
+
+                return Backtrack(i - 1, j);
             }
         }
     }

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FuzzyString
 {
     public static partial class ComparisonMetrics
-    { 
+    {
         /// <summary>
         /// Calculate the minimum number of single-character edits needed to change the source into the target,
         /// allowing insertions, deletions, and substitutions.
@@ -23,16 +19,13 @@ namespace FuzzyString
             if (source.Length == 0) { return target.Length; }
             if (target.Length == 0) { return source.Length; }
 
-            int distance = 0;
-
-            if (source[source.Length - 1] == target[target.Length - 1]) { distance = 0; }
-            else { distance = 1; }
+            var distance = source[source.Length - 1] == target[target.Length - 1] ? 0 : 1;
 
             var sourceInitial = source.Substring(0, source.Length - 1);
             var targetInitial = target.Substring(0, target.Length - 1);
-            return Math.Min(Math.Min(LevenshteinDistance(sourceInitial, target) + 1,
-                                     LevenshteinDistance(source, targetInitial)) + 1,
-                                     LevenshteinDistance(sourceInitial, targetInitial) + distance);
+
+            var min = Math.Min(LevenshteinDistance(sourceInitial, target) + 1, LevenshteinDistance(source, targetInitial) + 1);
+            return Math.Min(min, LevenshteinDistance(sourceInitial, targetInitial) + distance);
         }
 
         /// <summary>
@@ -45,7 +38,7 @@ namespace FuzzyString
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns>The Levenshtein distance, normalized so that the lower bound is always zero, rather than the difference in length between the two strings</returns>
-        public static double NormalizedLevenshteinDistance(this string source, string target)
+        public static float NormalizedLevenshteinDistance(this string source, string target)
         {
             int unnormalizedLevenshteinDistance = source.LevenshteinDistance(target);
 
@@ -64,8 +57,8 @@ namespace FuzzyString
             if (source.Length == target.Length) { return source.HammingDistance(target); }
 
             // Otherwise, the upper bound is the length of the longer string.
-            else if (source.Length > target.Length) { return source.Length; }
-            else if (target.Length > source.Length) { return target.Length; }
+            if (source.Length > target.Length) { return source.Length; }
+            if (target.Length > source.Length) { return target.Length; }
 
             return 9999;
         }

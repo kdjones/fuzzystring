@@ -1,37 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FuzzyString
 {
+    [Flags]
     public enum FuzzyStringComparisonOptions
     {
-        UseHammingDistance,
+        CaseSensitive = 0x0001,
 
-        UseJaccardDistance,
+        UseHammingDistance = 0x0002,
 
-        UseJaroDistance,
+        UseJaccardDistance = 0x0004,
 
-        UseJaroWinklerDistance,
+        UseJaroDistance = 0x0008,
 
-        UseLevenshteinDistance,
+        UseJaroWinklerDistance = 0x0010,
 
-        UseLongestCommonSubsequence,
+        UseLevenshteinDistance = 0x0020,
 
-        UseLongestCommonSubstring,
+        UseLongestCommonSubsequence = 0x0040,
 
-        UseNormalizedLevenshteinDistance,
+        UseLongestCommonSubstring = 0x0080,
 
-        UseOverlapCoefficient,
+        UseNormalizedLevenshteinDistance = 0x0100,
 
-        UseRatcliffObershelpSimilarity,
+        UseOverlapCoefficient = 0x0200,
 
-        UseSorensenDiceDistance,
+        UseRatcliffObershelpSimilarity = 0x0400,
 
-        UseTanimotoCoefficient,
+        UseSorensenDiceDistance = 0x0800,
 
-        CaseSensitive
+        UseTanimotoCoefficient = 0x1000,
     }
 }
